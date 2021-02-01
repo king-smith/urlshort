@@ -1,6 +1,26 @@
 # Exercise #2: URL Shortener
 
-[![exercise status: released](https://img.shields.io/badge/exercise%20status-released-green.svg?style=for-the-badge)](https://gophercises.com/exercises/urlshort)
+## Usage
+Install deps 
+
+`go dep`
+
+Run 
+
+`go run main/main.go --task=N --path=P`
+  - `task`: Task # to run (1 - 5)
+  - `path`: Path to file to parse (Tasks 2, 3, 5)
+  
+ ### Task 5
+ Task 5 requires a running mongoDB server to successfully run. This can be done with `docker`:
+ 
+ `docker run -d -p 2701:27017 --name mongodb mongo:4.0.4` 
+ 
+ Create .env file with default mongoDB config
+
+`cat .env.example > .env`
+
+
 ## Exercise details
 
 The goal of this exercise is to create an [http.Handler](https://golang.org/pkg/net/http/#Handler) that will look at the path of any incoming web request and determine if it should redirect the user to a new page, much like URL shortener would.
