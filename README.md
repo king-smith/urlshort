@@ -11,8 +11,8 @@ Run
   - `task`: Task # to run (1 - 5)
   - `path`: Path to file to parse (Tasks 2, 3, 5)
   
- ### Task 5
- Task 5 requires a running mongoDB server to successfully run. This can be done with `docker`:
+ ### Task 4
+ Task 4 requires a running mongoDB server to successfully run. This can be done with `docker`:
  
  `docker run -d -p 2701:27017 --name mongodb mongo:4.0.4` 
  
