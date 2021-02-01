@@ -47,6 +47,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hello, world!")
 }
 
+// Task 1 is to create handlers which will redirect a request if it's 
+// path is found in a provided path:url map. This includes creating
+// the base MapHandler which takes a map[string]string (map[path]url)
+// and a yamlHandler which takes a []byte of yaml format.
+// If a url is not found, the handler will use a provided fallback.
 func Task1() {
 	mux := defaultMux()
 
@@ -74,6 +79,7 @@ func Task1() {
 	http.ListenAndServe(":8080", yamlHandler)
 }
 
+// Task 2 is similar to 1 but reads in the raw yaml from a file instead
 func Task2(path string) {
 	// Read full file from provided path
 	yml, err := ioutil.ReadFile(path)
@@ -93,6 +99,7 @@ func Task2(path string) {
 	http.ListenAndServe(":8080", yamlHandler)
 }
 
+// Task 3 is similar to Task 1 & 2 but instead unmarshals raw json []byte from a file
 func Task3(path string) {
 	// Read full file from provided path
 	jsn, err := ioutil.ReadFile(path)
@@ -112,6 +119,9 @@ func Task3(path string) {
 	http.ListenAndServe(":8080", jsonHandler)
 }
 
+// Task 4 sets up and uses a mongoDB database to read in the paths to 
+// urls map. The DbHandler reads from the database each time the handler 
+// is called.
 func Task4() {
 	// Load in .env variables for secret variable safety
 	err := godotenv.Load(".env")
@@ -187,3 +197,27 @@ func Task4() {
 	fmt.Println("Starting the server on :8080")
 	http.ListenAndServe(":8080", dbHandler)
 }
+
+// Task 5 is the same as task 2 but safely reads in a file
+// instead of loading it straight into memory
+func Task5(path string) {
+	var redirects []urlshort.Redirect
+
+	// Parse yaml file into redirects interface
+	err := urlshort.ParseYamlFile(path, &redirects)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Get map[string]string from redirects interface
+	pathsToUrls := urlshort.RedirectsToMap(redirects)
+
+	mux := defaultMux()
+
+	// Use general MapHandler rather than yamlHandler
+	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
+
+	fmt.Println("Starting the server on :8080")
+	http.ListenAndServe(":8080", mapHandler)
+}
+
